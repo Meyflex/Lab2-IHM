@@ -1,7 +1,17 @@
 import React, { useState } from "react";
-import { View, TextInput, Button, StyleSheet } from "react-native";
+import {
+  View,
+  TextInput,
+  Button,
+  StyleSheet,
+  SafeAreaView,
+} from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import RotatingCard from "./RotatingCard";
+import {
+  GestureHandlerRootView,
+  ScrollView,
+} from "react-native-gesture-handler";
 type DataStructureDropdown = {
   label: string;
   value: string;
@@ -12,7 +22,7 @@ const App = () => {
   const [expiryMonth, setExpiryMonth] = useState<string>("01");
   const [expiryYear, setExpiryYear] = useState<string>("23");
   const [cvv, setCvv] = useState<string>("");
-  const [openMonth, setOpeMonth] = useState(false);
+  const [openMonth, setOpenMonth] = useState<boolean>(false);
   const [openYear, setOpenYear] = useState<boolean>(false);
   const [hasToRotate, setHasToRotate] = useState<boolean>(false);
 
@@ -74,91 +84,111 @@ const App = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <RotatingCard
-        cardName={cardName}
-        cardNumber={cardNumber}
-        cvv={cvv}
-        expiryMonth={expiryMonth}
-        expiryYear={expiryYear}
-        HasToRotate={hasToRotate}
-        setHasToRotate={setHasToRotate}
-        cardType={0}
-      />
-
-      <View style={styles.box}>
-        <TextInput
-          placeholder="Card Name"
-          value={cardName}
-          onChangeText={(val) => {
-            setCardName(val);
-            setHasToRotate(false);
+    <GestureHandlerRootView>
+      <SafeAreaView>
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={{
+            justifyContent: "flex-start",
+            marginTop: 100,
+            alignItems: "center",
+            height: "150%",
           }}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Card Number"
-          value={cardNumber}
-          onChangeText={isCreditCardValid}
-          style={styles.input}
-        />
-
-        <View style={styles.row}>
-          <DropDownPicker
-            items={months}
-            value={expiryMonth}
-            open={openMonth}
-            placeholder="Month"
-            containerStyle={[styles.pickerContainer, styles.smallInput]}
-            style={styles.picker}
-            setOpen={setOpeMonth}
-            setValue={(val) => {
-              setExpiryMonth(val);
-              setHasToRotate(false);
-            }}
-          />
-          <DropDownPicker
-            items={years}
-            value={expiryYear}
-            open={openYear}
-            placeholder="Year"
-            containerStyle={[styles.pickerContainer, styles.smallInput]}
-            style={styles.picker}
-            setOpen={setOpenYear}
-            setValue={(val) => {
-              setExpiryYear(val);
-              setHasToRotate(false);
-            }}
+        >
+          <RotatingCard
+            cardName={cardName}
+            cardNumber={cardNumber}
+            cvv={cvv}
+            expiryMonth={expiryMonth}
+            expiryYear={expiryYear}
+            HasToRotate={hasToRotate}
+            setHasToRotate={setHasToRotate}
+            cardType={0}
           />
 
-          <TextInput
-            placeholder="CVV"
-            value={cvv}
-            onChangeText={isCreditCvvValid}
-            style={[styles.input, styles.smallInput22]}
-          />
-        </View>
-        <Button title="Submit" onPress={onSubmit} />
-      </View>
-    </View>
+          <View style={styles.box}>
+            <TextInput
+              placeholder="Card Name"
+              value={cardName}
+              onChangeText={(val) => {
+                setCardName(val);
+                setHasToRotate(false);
+              }}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="Card Number"
+              value={cardNumber}
+              onChangeText={isCreditCardValid}
+              style={styles.input}
+              keyboardType="numeric"
+            />
+
+            <View style={styles.row}>
+              <DropDownPicker
+                items={months}
+                value={expiryMonth}
+                open={openMonth}
+                zIndex={1}
+                placeholder="Month"
+                containerStyle={[styles.pickerContainer, styles.smallInput]}
+                dropDownContainerStyle={styles.pickerDropdownContainer}
+                style={styles.input}
+                setOpen={setOpenMonth}
+                setValue={(val) => {
+                  setExpiryMonth(val);
+                  setHasToRotate(false);
+                }}
+              />
+              <DropDownPicker
+                items={years}
+                value={expiryYear}
+                zIndex={1}
+                open={openYear}
+                placeholder="Year"
+                containerStyle={[styles.pickerContainer, styles.smallInput]}
+                dropDownContainerStyle={styles.pickerDropdownContainer}
+                style={styles.input}
+                setOpen={setOpenYear}
+                setValue={(val) => {
+                  setExpiryYear(val);
+                  setHasToRotate(false);
+                }}
+              />
+
+              <TextInput
+                placeholder="CVV"
+                value={cvv}
+                onChangeText={isCreditCvvValid}
+                style={[styles.input, styles.smallInput22]}
+                keyboardType="numeric"
+              />
+            </View>
+            <View style={{ zIndex: -1 }}>
+              <Button title="Submit" onPress={onSubmit} />
+            </View>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </GestureHandlerRootView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    justifyContent: "center",
-    alignItems: "center",
+
     height: "100%",
   },
   box: {
-    justifyContent: "center",
     width: "100%",
   },
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "flex-start",
     marginBottom: 20,
+    width: "100%",
   },
   input: {
     borderWidth: 1,
@@ -169,27 +199,26 @@ const styles = StyleSheet.create({
   },
 
   smallInput22: {
-    marginRight: 10,
     width: "20%",
   },
   pickerContainer: {
     height: 40,
     width: 120,
+    borderColor: "#ccc",
   },
-  picker: {
-    backgroundColor: "white",
-  },
+
   pickerItem: {
     justifyContent: "flex-start",
   },
-  dropDown: {
-    backgroundColor: "white",
-    zIndex: 1000,
-  },
+
   smallInput: {
-    marginLeft: 10,
     marginRight: 10,
     borderRadius: 5,
+    borderColor: "#ccc",
+  },
+  pickerDropdownContainer: {
+    zIndex: 1000,
+    borderColor: "#ccc",
   },
 });
 

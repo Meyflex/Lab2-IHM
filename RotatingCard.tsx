@@ -55,8 +55,27 @@ const RotatingCard: React.FC<RotatingCardInterface> = ({
   };
 
   let completeCardNumber = cardNumber;
-  for (var i = cardNumber.length; i < 16; i++) completeCardNumber += '#';
-  const formattedCardNumber = completeCardNumber[0] +completeCardNumber[1] +completeCardNumber[2] +completeCardNumber[3] + '   ' + completeCardNumber[4] +completeCardNumber[5] +completeCardNumber[6] +completeCardNumber[7] + '   ' + completeCardNumber[8] +completeCardNumber[9] +completeCardNumber[10] +completeCardNumber[11] + '   ' + completeCardNumber[12] +completeCardNumber[13] +completeCardNumber[14] +completeCardNumber[15] 
+  for (let i = cardNumber.length; i < 16; i++) completeCardNumber += "#";
+  const formattedCardNumber =
+    completeCardNumber[0] +
+    completeCardNumber[1] +
+    completeCardNumber[2] +
+    completeCardNumber[3] +
+    "   " +
+    completeCardNumber[4] +
+    completeCardNumber[5] +
+    completeCardNumber[6] +
+    completeCardNumber[7] +
+    "   " +
+    completeCardNumber[8] +
+    completeCardNumber[9] +
+    completeCardNumber[10] +
+    completeCardNumber[11] +
+    "   " +
+    completeCardNumber[12] +
+    completeCardNumber[13] +
+    completeCardNumber[14] +
+    completeCardNumber[15];
 
   // Interpolate the rotation value
   const rotate = rotationValue.interpolate({
@@ -76,25 +95,38 @@ const RotatingCard: React.FC<RotatingCardInterface> = ({
           {isRotated ? (
             <View style={styles.carteFront}>
               <View style={styles.spaceBetween}>
-                <Image source={require("./assets/chip.png")} style={styles.Chip} />
-                <Image source={cardTypeValues[cardType]} style={styles.bankType} />
+                <Image
+                  source={require("./assets/chip.png")}
+                  style={styles.Chip}
+                />
+                <Image
+                  source={cardTypeValues[cardType]}
+                  style={styles.bankType}
+                />
               </View>
               <Text style={styles.CardNumber}>{formattedCardNumber}</Text>
-              <View style={styles.CardName}>
-                <Text> Card Holder </Text>
-                <Text>{cardName.toUpperCase()}</Text>
-              </View>
-              <View style={styles.dateExpiration}>
-                <Text> Expires</Text>
-                <Text>
-                  {expiryMonth}/{expiryYear}
-                </Text>
+              <View style={styles.spaceBetween}>
+                <View style={styles.CardName}>
+                  <Text style={styles.grayText}>Card Holder </Text>
+                  <Text style={styles.WhiteText}>{cardName.toUpperCase()}</Text>
+                </View>
+                <View style={styles.dateExpiration}>
+                  <Text style={styles.grayText}>Expires</Text>
+                  <Text style={styles.WhiteText}>
+                    {expiryMonth}/{expiryYear}
+                  </Text>
+                </View>
               </View>
             </View>
           ) : (
             <View style={styles.carteBack}>
-              <Text>{cvv}</Text>
-              <Image source={cardTypeValue} />
+              <View style={styles.BorneNoir}></View>
+              <Text style={styles.CVVText}>CVV</Text>
+              <Text style={styles.BorneBlanche}>{cvv}</Text>
+              <Image
+                source={cardTypeValues[cardType]}
+                style={styles.bankTypeBack}
+              />
             </View>
           )}
         </ImageBackground>
@@ -108,7 +140,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 20,
-    color: "#FFF"
+    color: "#FFF",
   },
   card: {
     width: 1.61 * 220,
@@ -117,50 +149,90 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 10,
     borderWidth: 1,
-    padding:20,
+
     overflow: "hidden",
-    
   },
   cardText: {
     color: "white",
   },
 
   carteFront: {
-    width:"100%",
-    height:"100%",
+    width: "100%",
+    height: "100%",
     justifyContent: "flex-start",
-    
-    
+    padding: 20,
+    backgroundColor: "rgba(0,0,0, 0.40)",
   },
-  carteBack: {},
+  carteBack: {
+    width: "100%",
+    justifyContent: "flex-start",
+    alignItems: "flex-end",
+    height: "100%",
+    backgroundColor: "rgba(0,0,0, 0.40)",
+  },
   spaceBetween: {
     justifyContent: "space-between",
     flexDirection: "row",
-    
-    width:"100%",
-   
-    alignItems:"flex-start"
+    width: "100%",
+
+    alignItems: "flex-start",
   },
   CardName: {
-    color: "#FFF"
+    maxWidth: "80%",
   },
   dateExpiration: {},
   Chip: {
     height: 50,
-    width:60
+    width: 60,
   },
-  bankType:{
+  bankType: {
     maxWidth: 80,
-    maxHeight:60,
+    maxHeight: 60,
     objectFit: "contain",
   },
-  CardNumber : {
-    fontSize:24,
-    fontWeight:"500",
+  CardNumber: {
+    fontSize: 24,
+    fontWeight: "600",
     color: "#FFF",
     marginVertical: 20,
-
-  }
+  },
+  grayText: {
+    color: "#aaa",
+  },
+  WhiteText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "500",
+  },
+  BorneBlanche: {
+    width: "95%",
+    alignSelf: "center",
+    backgroundColor: "white",
+    borderRadius: 5,
+    overflow: "hidden",
+    textAlign: "right",
+    padding: 10,
+    height: "17%",
+  },
+  BorneNoir: {
+    marginTop: "7%",
+    backgroundColor: "black",
+    height: "22%",
+    width: "100%",
+  },
+  CVVText: {
+    marginRight: 15,
+    color: "white",
+    fontSize: 13,
+    marginBottom: 2,
+    marginTop: 8,
+  },
+  bankTypeBack: {
+    maxWidth: 80,
+    maxHeight: 60,
+    objectFit: "contain",
+    margin: 7,
+  },
 });
 
 export default RotatingCard;
