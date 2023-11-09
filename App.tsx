@@ -25,6 +25,7 @@ const App = () => {
   const [openMonth, setOpenMonth] = useState<boolean>(false);
   const [openYear, setOpenYear] = useState<boolean>(false);
   const [hasToRotate, setHasToRotate] = useState<boolean>(false);
+  const [cardType, setCardType] = useState<number>(0);
 
   const months: DataStructureDropdown[] = [
     { label: "January", value: "01" },
@@ -54,12 +55,107 @@ const App = () => {
 
   function isCreditCardValid(cardNumber: string) {
     // Use a regular expression to check if cardNumber is exactly 16 digits
+    // except for 15
+    cardNumber = cardNumber.replaceAll(" ", "");
+    if (cardNumber.startsWith("34") || cardNumber.startsWith("37")) {
+      setCardType(3);
+      const cardNumberPattern =
+        /^\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?$/;
+      const valeur = cardNumberPattern.test(cardNumber);
+      setHasToRotate(false);
+      if (valeur) {
+        let formattedCardNumber;
+        if (cardType === 3) {
+          // Note: Using optional chaining operator '?' to handle possibly undefined values
+          formattedCardNumber = `${cardNumber.charAt(0)}${cardNumber.charAt(
+            1
+          )}${cardNumber.charAt(2)}${cardNumber.charAt(
+            3
+          )}   ${cardNumber.charAt(4)}${cardNumber.charAt(
+            5
+          )}${cardNumber.charAt(6)}${cardNumber.charAt(7)}${cardNumber.charAt(
+            8
+          )}${cardNumber.charAt(9)}   ${cardNumber.charAt(
+            10
+          )}${cardNumber.charAt(11)}${cardNumber.charAt(12)}${cardNumber.charAt(
+            13
+          )}${cardNumber.charAt(14)}`;
+        } else {
+          formattedCardNumber = `${cardNumber.charAt(0)}${cardNumber.charAt(
+            1
+          )}${cardNumber.charAt(2)}${cardNumber.charAt(
+            3
+          )}   ${cardNumber.charAt(4)}${cardNumber.charAt(
+            5
+          )}${cardNumber.charAt(6)}${cardNumber.charAt(
+            7
+          )}   ${cardNumber.charAt(8)}${cardNumber.charAt(
+            9
+          )}${cardNumber.charAt(10)}${cardNumber.charAt(
+            11
+          )}   ${cardNumber.charAt(12)}${cardNumber.charAt(
+            13
+          )}${cardNumber.charAt(14)}${cardNumber.charAt(15)}`;
+        }
+
+        setCardNumber(formattedCardNumber.trimEnd());
+      }
+      return;
+    }
+    if (cardNumber.startsWith("4")) {
+      setCardType(0);
+    }
+    if (cardNumber.startsWith("5")) {
+      setCardType(1);
+    }
+    if (cardNumber.startsWith("6")) {
+      setCardType(2);
+    }
+    if (cardNumber.startsWith("38")) {
+      setCardType(4);
+    }
+    if (cardNumber.startsWith("30")) {
+      setCardType(4);
+    }
+    if (cardNumber.startsWith("36")) {
+      setCardType(4);
+    }
     const cardNumberPattern =
       /^\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?$/;
     const valeur = cardNumberPattern.test(cardNumber);
     setHasToRotate(false);
     if (valeur) {
-      setCardNumber(cardNumber);
+      let formattedCardNumber;
+      if (cardType === 3) {
+        // Note: Using optional chaining operator '?' to handle possibly undefined values
+        formattedCardNumber = `${cardNumber.charAt(0)}${cardNumber.charAt(
+          1
+        )}${cardNumber.charAt(2)}${cardNumber.charAt(3)}   ${cardNumber.charAt(
+          4
+        )}${cardNumber.charAt(5)}${cardNumber.charAt(6)}${cardNumber.charAt(
+          7
+        )}${cardNumber.charAt(8)}${cardNumber.charAt(9)}   ${cardNumber.charAt(
+          10
+        )}${cardNumber.charAt(11)}${cardNumber.charAt(12)}${cardNumber.charAt(
+          13
+        )}${cardNumber.charAt(14)}`;
+      } else {
+        formattedCardNumber = `${cardNumber.charAt(0)}${cardNumber.charAt(
+          1
+        )}${cardNumber.charAt(2)}${cardNumber.charAt(3)}   ${cardNumber.charAt(
+          4
+        )}${cardNumber.charAt(5)}${cardNumber.charAt(6)}${cardNumber.charAt(
+          7
+        )}   ${cardNumber.charAt(8)}${cardNumber.charAt(9)}${cardNumber.charAt(
+          10
+        )}${cardNumber.charAt(11)}   ${cardNumber.charAt(
+          12
+        )}${cardNumber.charAt(13)}${cardNumber.charAt(14)}${cardNumber.charAt(
+          15
+        )}`;
+      }
+
+      setCardNumber(formattedCardNumber.trimEnd());
     }
   }
   function isCreditCvvValid(cvvNumber: string) {
@@ -103,7 +199,7 @@ const App = () => {
             expiryYear={expiryYear}
             HasToRotate={hasToRotate}
             setHasToRotate={setHasToRotate}
-            cardType={0}
+            cardType={cardType}
           />
 
           <View style={styles.box}>

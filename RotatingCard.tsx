@@ -33,7 +33,16 @@ const RotatingCard: React.FC<RotatingCardInterface> = ({
   const rotationValue = useRef(new Animated.Value(0)).current;
   const cardTypeVisa = require("./assets/visa.png");
   const cardTypeMaster = require("./assets/mastercard.png");
-  const cardTypeValues = [cardTypeVisa, cardTypeMaster];
+  const cardTypeDiscovery = require("./assets/discover.png");
+  const cardTypeAmex = require("./assets/amex.png");
+  const cardTypeOther = require("./assets/dinersclub.png");
+  const cardTypeValues = [
+    cardTypeVisa,
+    cardTypeMaster,
+    cardTypeDiscovery,
+    cardTypeAmex,
+    cardTypeOther,
+  ];
 
   useEffect(() => {
     if (HasToRotate === isRotated) {
@@ -53,29 +62,51 @@ const RotatingCard: React.FC<RotatingCardInterface> = ({
       setHasToRotate(isRotated);
     }, 250);
   };
-
-  let completeCardNumber = cardNumber;
-  for (let i = cardNumber.length; i < 16; i++) completeCardNumber += "#";
-  const formattedCardNumber =
-    completeCardNumber[0] +
-    completeCardNumber[1] +
-    completeCardNumber[2] +
-    completeCardNumber[3] +
-    "   " +
-    completeCardNumber[4] +
-    completeCardNumber[5] +
-    completeCardNumber[6] +
-    completeCardNumber[7] +
-    "   " +
-    completeCardNumber[8] +
-    completeCardNumber[9] +
-    completeCardNumber[10] +
-    completeCardNumber[11] +
-    "   " +
-    completeCardNumber[12] +
-    completeCardNumber[13] +
-    completeCardNumber[14] +
-    completeCardNumber[15];
+  let formattedCardNumber;
+  let completeCardNumber = cardNumber.replaceAll(" ", "");
+  for (let i = completeCardNumber.length; i < (cardType == 3 ? 15 : 16); i++)
+    completeCardNumber += "#";
+  if (cardType == 3) {
+    formattedCardNumber =
+      completeCardNumber[0] +
+      completeCardNumber[1] +
+      completeCardNumber[2] +
+      completeCardNumber[3] +
+      "   " +
+      completeCardNumber[4] +
+      completeCardNumber[5] +
+      completeCardNumber[6] +
+      completeCardNumber[7] +
+      completeCardNumber[8] +
+      completeCardNumber[9] +
+      "   " +
+      completeCardNumber[10] +
+      completeCardNumber[11] +
+      completeCardNumber[12] +
+      completeCardNumber[13] +
+      completeCardNumber[14];
+  } else {
+    formattedCardNumber =
+      completeCardNumber[0] +
+      completeCardNumber[1] +
+      completeCardNumber[2] +
+      completeCardNumber[3] +
+      "   " +
+      completeCardNumber[4] +
+      completeCardNumber[5] +
+      completeCardNumber[6] +
+      completeCardNumber[7] +
+      "   " +
+      completeCardNumber[8] +
+      completeCardNumber[9] +
+      completeCardNumber[10] +
+      completeCardNumber[11] +
+      "   " +
+      completeCardNumber[12] +
+      completeCardNumber[13] +
+      completeCardNumber[14] +
+      completeCardNumber[15];
+  }
 
   // Interpolate the rotation value
   const rotate = rotationValue.interpolate({
